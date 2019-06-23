@@ -66,11 +66,14 @@ function metaLoaded(event, pos){
     console.log("Duration" +audios[pos].duration)
     var shareText = elems[pos].cloneNode().outerHTML
     elems[pos].innerHTML = guiCode(0, audios[pos].duration);
-    elems[pos].getElementsByClassName("share-popup-text")[0].innerHTML = shareText
-    elems[pos].getElementsByClassName("song-title")[0].innerHTML = elems[pos].getAttribute("saAudioTitle")
+    elems[pos].getElementsByClassName("share-popup-text")[0].innerHTML = shareText+" <script src='https://cdn.jsdelivr.net/gh/ceodigvijay/smartaudio@master/smartAudio.js'></script>"
+    elems[pos].getElementsByClassName("song-title")[0].innerHTML = "<strong>Listen To this : </strong>"+elems[pos].getAttribute("saAudioTitle")
     elems[pos].getElementsByClassName("pause")[0].style.display = "None"
     elems[pos].getElementsByClassName("share-popup")[0].style.display = "None"
     elems[pos].getElementsByClassName("button-share")[0].onclick = showShare.bind(this, event, pos)
+    elems[pos].getElementsByClassName("myRange")[0].oninput = function(event){
+        audios[pos].currentTime = event.target.value
+    }
     elems[pos].getElementsByClassName("play")[0].onclick = play.bind(this, event, pos)
     elems[pos].getElementsByClassName("pause")[0].onclick = play.bind(this, event, pos)
     elems[pos].getElementsByClassName("forward")[0].onclick = () => audios[pos].currentTime+=15
@@ -78,7 +81,10 @@ function metaLoaded(event, pos){
     elems[pos].getElementsByClassName("endTime")[0].innerHTML = sectomin(audios[pos].duration)
     audios[pos].ontimeupdate = updateSlider.bind(this, event, pos)
     audios[pos].onended = end.bind(this, event, pos)
+}
 
+function sliderInput(event, pos){
+    console.log(pos)
 }
 
 function showShare(event, pos){
