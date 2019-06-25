@@ -1,4 +1,3 @@
-https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css
  // Create new link Element 
 var link = document.createElement('link');  
 link.rel = 'stylesheet';  
@@ -10,6 +9,7 @@ var link = document.createElement('link');
 link.rel = 'stylesheet';  
 link.type = 'text/css'; 
 link.href = 'https://cdn.jsdelivr.net/gh/ceodigvijay/smartaudio@master/some.css';  
+// link.href = './some.css';  
 document.getElementsByTagName('HEAD')[0].appendChild(link);  
 
 
@@ -22,6 +22,12 @@ function guiCode(min, max) {
     '<i class="fas fa-play play"></i>' +
     '<i class="fas fa-pause pause"></i>' +
     '<i class="fas fa-redo forward"></i>' +
+    '<select class="playspeed">'+
+      '<option value="0.5">0.5x</option>'+
+      '<option selected="selected" value="1">1x</option>'+
+      '<option value="1.5">1.5x</option>'+
+      '<option value="2">2x</option>'+
+    '</select>'+
     "</div>" +
     '<div class="song-title center-item">'+
     'Some Title Here'+
@@ -42,12 +48,46 @@ function guiCode(min, max) {
     '<div class="share-popup">'+
     '<textarea class="share-popup-text">Some Text</textarea>'+
     '<div class="social-share">'+
-    '<i class="fab fa-facebook fb-logo share-logo"></i>'+
-     '<i class="fab fa-twitter twitter-logo share-logo"></i>'+
+    '<a class="fab fa-facebook fb-logo share-logo" href="javascript:getFbLink()"></a>'+
+     '<a class="fab fa-twitter twitter-logo share-logo" href="javascript:getTwitterLink()"></a>'+
+     '<a class="fab fa-linkedin linkedin-logo share-logo" href="javascript:getLinkedinLink()"></a>'+
+    "<a class='fas fa-envelope-open email-logo share-logo' onclick='javascript: shareEmail()'></a>"+
+    '<a class="fas fa-link link-logo share-logo" onclick="javascript: copyLink()"></a>'+
       '</div>'+
     '</div>'
   );
 }
+
+function getFbLink(){
+    window.open("https://www.facebook.com/sharer/sharer.php?u="+escape(window.location.href)+"&t="+document.title, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+    return false; 
+}
+
+function getTwitterLink(){
+    window.open('https://twitter.com/share?url='+escape(window.location.href)+'&text='+document.title + '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+    return false; 
+}
+
+function getLinkedinLink(){
+    window.open("https://www.linkedin.com/shareArticle?mini=true&url="
+    + escape(window.location.href)
+    +"&title=",'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+    return false;
+}
+
+function shareEmail(){
+    window.open('mailto:?subject= Check Out this Link' + '&body=' + encodeURIComponent(document.URL))
+}
+
+function copyLink(){
+    var text = window.location.href;
+    navigator.clipboard.writeText(text).then(function() {
+    console.log('Copying to clipboard was successful!');
+    }, function(err) {
+    console.error('Could not copy text: ', err);
+    });
+}
+
 var audios = []
 var elems = document.getElementsByClassName("smartAudio");
 for (var i = 0; i < elems.length; i++) {
@@ -78,9 +118,15 @@ function metaLoaded(event, pos){
     elems[pos].getElementsByClassName("pause")[0].onclick = play.bind(this, event, pos)
     elems[pos].getElementsByClassName("forward")[0].onclick = () => audios[pos].currentTime+=15
     elems[pos].getElementsByClassName("backward")[0].onclick = () => audios[pos].currentTime-=15
+    elems[pos].getElementsByClassName("playspeed")[0].onchange = onPlaybackChange.bind(this, event, pos)
     elems[pos].getElementsByClassName("endTime")[0].innerHTML = sectomin(audios[pos].duration)
     audios[pos].ontimeupdate = updateSlider.bind(this, event, pos)
     audios[pos].onended = end.bind(this, event, pos)
+}
+
+function onPlaybackChange(event, pos){
+    var speed = elems[pos].getElementsByClassName("playspeed")[0].value
+    audios[pos].playbackRate = speed
 }
 
 function sliderInput(event, pos){
