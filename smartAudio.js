@@ -103,7 +103,6 @@ function sectomin(timeinsec){
 
 
 function metaLoaded(event, pos){
-    console.log("Duration" +audios[pos].duration)
     var shareText = elems[pos].cloneNode().outerHTML
     elems[pos].innerHTML = guiCode(0, audios[pos].duration);
     elems[pos].getElementsByClassName("share-popup-text")[0].innerHTML = shareText+" <script src='https://cdn.jsdelivr.net/gh/ceodigvijay/smartaudio@master/smartAudio.js'></script>"
@@ -129,10 +128,6 @@ function onPlaybackChange(event, pos){
     audios[pos].playbackRate = speed
 }
 
-function sliderInput(event, pos){
-    console.log(pos)
-}
-
 function showShare(event, pos){
     shareElem = elems[pos].getElementsByClassName("share-popup")[0]
      if(shareElem.style.display == "grid"){
@@ -143,7 +138,6 @@ function showShare(event, pos){
 }
 
 function updateSlider(event, pos){
-    console.log("Changed")
     curtime = parseInt(audios[pos].currentTime, 10);
     elems[pos].getElementsByClassName("myRange")[0].setAttribute("value", curtime)
     elems[pos].getElementsByClassName("myRange")[0].value = curtime
@@ -153,17 +147,13 @@ function updateSlider(event, pos){
 function play(event, pos){
     console.log(audios[pos].duration)
     if(audios[pos].paused){
-        console.log("paused")
         audios[pos].play()
         elems[pos].getElementsByClassName("pause")[0].style.display = "inline"
         elems[pos].getElementsByClassName("play")[0].style.display = "None"
-        console.log("Played")
     }else{
-        console.log("Playing")
         audios[pos].pause()
         elems[pos].getElementsByClassName("pause")[0].style.display = "None"
         elems[pos].getElementsByClassName("play")[0].style.display = "inline"
-        console.log("Paused")
     }
     
 }
